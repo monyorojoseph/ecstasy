@@ -1,6 +1,14 @@
+import ChangePassword from "./ChangePassord";
+
 const Profile = ()=> {
     return (
-        <h4>Profile</h4>
+        <div className="container mx-auto">
+            {/* personal detail */}
+            {/* change password */}
+            <div>
+                <ChangePassword />
+            </div>
+        </div>
     )
 }
 
