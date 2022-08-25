@@ -13,7 +13,7 @@ const products = [
     color: 'Salmon',
     price: '$90.00',
     quantity: 1,
-    imageSrc: image1,
+    imageSrc: 'https://unsplash.com/photos/DoK5qEy2L60',
     imageAlt: 'Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.',
   },
   {
@@ -23,7 +23,7 @@ const products = [
     color: 'Blue',
     price: '$32.00',
     quantity: 1,
-    imageSrc: image2,
+    imageSrc: 'https://unsplash.com/photos/bzLhhI3MpYY',
     imageAlt:
       'Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.',
   },  
@@ -34,7 +34,7 @@ const products = [
     color: 'Blue',
     price: '$32.00',
     quantity: 1,
-    imageSrc: image2,
+    imageSrc: 'https://unsplash.com/photos/98Kk8vwPbgs',
     imageAlt:
       'Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.',
   },

@@ -1,7 +1,44 @@
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, Navigate } from "react-router-dom";
+import { connect } from "react-redux";
+import { createUser } from '../../redux/actions/authentication'
+import { authenticationReducerTypes } from "../../redux/reducers/authentication";
+import { signupTypes } from '../../interface_types/signup'
+import { stateTypes } from "../../interface_types/state";
 
-const Signup = ()=> {
+interface PropsType {
+  createUser: Function
+  authentication: authenticationReducerTypes
+}
 
+const Signup = ({createUser, authentication}: PropsType)=> {
+
+  const { creating, created } = authentication  
+  const [ data, setData ] = useState<signupTypes>({
+    username: '',
+    email: '',
+    password: ''
+  })
+
+  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.persist()
+    setData({
+      ...data,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  const submitHandler = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    console.log(data)
+    createUser(data)
+  } 
+
+  useEffect(()=> {
+    if (created){
+      <Navigate to='sign-in' />
+    }
+  }, [created])
 
   return (
     <div className='container mx-auto'>
@@ -14,7 +51,7 @@ const Signup = ()=> {
             </h2>
           </div>
 
-          <form className="mt-8 space-y-3">
+          <form className="mt-8 space-y-3" onSubmit={submitHandler}>
 
             <div className="space-y-2">
             <label>
@@ -24,6 +61,8 @@ const Signup = ()=> {
                 name="username"
                 type="text"
                 autoComplete="username"
+                onChange={changeHandler}
+                value={data.username}
                 required
                 className="appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="type your preffered username"
@@ -38,6 +77,8 @@ const Signup = ()=> {
                 name="email"
                 type="email"
                 autoComplete="email"
+                onChange={changeHandler}
+                value={data.email}
                 required
                 className="appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="type your email address"
@@ -51,6 +92,8 @@ const Signup = ()=> {
             <input
                 name="password"
                 type="password"
+                onChange={changeHandler}
+                value={data.password}
                 required
                 className="appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
@@ -81,4 +124,12 @@ const Signup = ()=> {
   )
 }
 
-export default Signup;
+const mapStateToProps = (state: stateTypes)=> ({
+  authentication: state.authentication
+})
+
+const mapDispatchToProps = {
+  createUser
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Signup);

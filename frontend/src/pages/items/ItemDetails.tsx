@@ -1,10 +1,5 @@
 import { StarIcon } from '@heroicons/react/solid'
 
-import image1 from '../../assets/images/0_DSC_1715-1.jpg';
-import image2 from '../../assets/images/Chocolate-Chip-Cannabis-Cookie.jpg';
-import image3 from '../../assets/images/106324937-1578421760494gettyimages-1170465516.jpeg';
-import image4 from '../../assets/images/Indoor-Lifter-Pre-Roll.jpg';
-
 
 const product = {
   name: 'Basic Tee 6-Pack',
@@ -12,19 +7,19 @@ const product = {
   href: '#',
   images: [
     {
-      src: image1,
+      src: 'https://unsplash.com/photos/tDoHiqXl9b8',
       alt: 'Two each of gray, white, and black shirts laying flat.',
     },
     {
-      src: image2,
+      src: 'https://unsplash.com/photos/kID9sxbJ3BQ',
       alt: 'Model wearing plain black basic tee.',
     },
     {
-      src: image3,
+      src: 'https://unsplash.com/photos/DoK5qEy2L60',
       alt: 'Model wearing plain gray basic tee.',
     },
     {
-      src: image4,
+      src: 'https://unsplash.com/photos/DoK5qEy2L60',
       alt: 'Model wearing plain white basic tee.',
     },
   ],

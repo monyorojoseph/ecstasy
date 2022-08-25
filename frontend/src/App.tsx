@@ -15,6 +15,7 @@ import Payment from "./pages/settings/Payment"
 import Subscriptions from "./pages/settings/Subscriptions"
 import Header from "./components/Header"
 import { useState } from "react"
+import ProtectedRoute from "./ProtectedRoute"
 
 function App() {
   const [open, setOpen] = useState(false)
@@ -29,7 +30,7 @@ function App() {
         <Route path="items" element={<Items />} />
         <Route path="item-:slug" element={<ItemDetails />} />
         <Route path="checkout" element={<Checkout />} />
-        <Route path="settings/" element={<Settings />}>
+        <Route path="settings/" element={<ProtectedRoute><Settings /></ProtectedRoute>}>
           <Route index element={<Profile />} />
           <Route path="orders" element={<Orders />} />
           <Route path="payment" element={<Payment />} />

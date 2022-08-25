@@ -2,7 +2,7 @@ import {Link, Outlet } from 'react-router-dom';
 
 const Settings = ()=> {
     return (
-        <div className="container mx-auto">
+        <div className="container mx-auto overflow-x-auto">
             {/* sub menu */}
             <div className="flex justify-start text-sm font-bold space-x-2">
                 <Link to='/settings'
@@ -21,6 +21,7 @@ const Settings = ()=> {
                 className='border py-1 px-3 rounded-full shadow-sm'
                 >Payment</Link>
             </div>
+            
             {/* outlets */}
             <div className='mt-4'>
                 <Outlet />

@@ -1,7 +1,3 @@
-import image1 from '../../assets/images/0_DSC_1715-1.jpg';
-import image2 from '../../assets/images/Chocolate-Chip-Cannabis-Cookie.jpg';
-import image3 from '../../assets/images/106324937-1578421760494gettyimages-1170465516.jpeg';
-import image4 from '../../assets/images/Indoor-Lifter-Pre-Roll.jpg';
 import { Link } from 'react-router-dom';
 
 
@@ -11,7 +7,7 @@ const products = [
       name: 'Earthen Bottle',
       href: 'Candies',
       price: '$48',
-      imageSrc: image1,
+      imageSrc: 'https://unsplash.com/photos/NxRx7_mPdEk',
       imageAlt: 'Tall slender porcelain bottle with natural clay textured body and cork stopper.',
     },
     {
@@ -19,7 +15,7 @@ const products = [
       name: 'Nomad Tumbler',
       href: 'Cookie',
       price: '$35',
-      imageSrc: image2,
+      imageSrc: 'https://unsplash.com/photos/GHVBpTkSqfs',
       imageAlt: 'Olive drab green insulated bottle with flared screw lid and flat top.',
     },
     {
@@ -27,7 +23,7 @@ const products = [
       name: 'Focus Paper Refill',
       href: 'Chocolate',
       price: '$89',
-      imageSrc: image3,
+      imageSrc: 'https://unsplash.com/photos/NxRx7_mPdEk',
       imageAlt: 'Person using a pen to cross a task off a productivity paper card.',
     },
     {
@@ -35,7 +31,7 @@ const products = [
       name: 'Machined Mechanical Pencil',
       href: 'Blunt',
       price: '$35',
-      imageSrc: image4,
+      imageSrc: 'https://unsplash.com/photos/tDoHiqXl9b8',
       imageAlt: 'Hand holding black machined steel mechanical pencil with brass tip and top.',
     },
     // More products...

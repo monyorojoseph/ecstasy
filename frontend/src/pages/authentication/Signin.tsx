@@ -1,14 +1,46 @@
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { connect } from "react-redux";
+import { signinTypes } from "../../interface_types/signin";
+import { signIn } from "../../redux/actions/authentication";
+import { stateTypes } from "../../interface_types/state";
+import { authenticationReducerTypes } from "../../redux/reducers/authentication";
 
-const Signin = ()=> {
+interface PropsType {
+  signIn: Function
+  authentication: authenticationReducerTypes
+}
+
+const Signin = ({signIn, authentication}: PropsType)=> {
+  const { loading, token } = authentication
+  const [ data, setData ] = useState<signinTypes>({
+    email: '',
+    password: ''
+  })
+
+  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>)=> {
+    e.persist()
+    setData({
+      ...data,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  const submitHandler = (e:React.SyntheticEvent)=> {
+    e.preventDefault()
+    console.log(data)
+    signIn(data)
+  }
   let location = useLocation()
   let navigate = useNavigate()
 
-  // let from = location.state?.from?.pathname || "/";
+  let from = location.state?.from?.pathname || "/";
+
   useEffect(()=>{
-    // navigate(from, { replace: true });
-  }, [])
+    if(token){
+      navigate(from, { replace: true });
+    }
+  }, [token])
 
   return (
     <div className='container mx-auto'>
@@ -21,7 +53,7 @@ const Signin = ()=> {
             </h2>
           </div>
 
-          <form className="mt-8 space-y-3">
+          <form className="mt-8 space-y-3" onSubmit={submitHandler}>
             <div className="rounded-md shadow-sm -space-y-px">
               <div>
                 <label htmlFor="email-address" className="sr-only">
@@ -32,6 +64,8 @@ const Signin = ()=> {
                   name="email"
                   type="email"
                   autoComplete="email"
+                  onChange={changeHandler}
+                  value={data.email}
                   required
                   className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="Email address"
@@ -46,6 +80,8 @@ const Signin = ()=> {
                   name="password"
                   type="password"
                   autoComplete="current-password"
+                  onChange={changeHandler}
+                  value={data.password}
                   required
                   className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="Password"
@@ -77,4 +113,12 @@ const Signin = ()=> {
   )
 }
 
-export default Signin;
+const mapStateToProps = (state: stateTypes)=> ({
+  authentication: state.authentication
+})
+
+const mapDispatchToProps = {
+  signIn
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Signin);
