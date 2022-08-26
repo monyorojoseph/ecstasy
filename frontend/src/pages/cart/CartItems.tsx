@@ -1,51 +1,26 @@
-import { Fragment } from 'react'
+import { Fragment, useEffect } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { stateTypes } from '../../interface_types/state';
+import { getCartItems } from '../../redux/actions/cart';
+import { cartReducerType } from '../../redux/reducers/cart';
 
-const products = [
-  {
-    id: 1,
-    name: 'Throwback Hip Bag',
-    href: '#',
-    color: 'Salmon',
-    price: '$90.00',
-    quantity: 1,
-    imageSrc: 'https://unsplash.com/photos/DoK5qEy2L60',
-    imageAlt: 'Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.',
-  },
-  {
-    id: 2,
-    name: 'Medium Stuff Satchel',
-    href: '#',
-    color: 'Blue',
-    price: '$32.00',
-    quantity: 1,
-    imageSrc: 'https://unsplash.com/photos/bzLhhI3MpYY',
-    imageAlt:
-      'Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.',
-  },  
-  {
-    id: 3,
-    name: 'Medium Stuff Satchel',
-    href: '#',
-    color: 'Blue',
-    price: '$32.00',
-    quantity: 1,
-    imageSrc: 'https://unsplash.com/photos/98Kk8vwPbgs',
-    imageAlt:
-      'Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.',
-  },
-  // More products...
-]
-
-interface CartItemsProps {
+interface PropsTyep {
   open: boolean
   setOpen: Function
+  getCartItems: Function
+  cart: cartReducerType
 }
 
-const CartItems = ({open, setOpen}:CartItemsProps)=> {
-
+const CartItems = ({open, setOpen, getCartItems, cart}:PropsTyep)=> {
+  const { loading, order_items } = cart
+  useEffect(()=> {
+    if (open){
+      getCartItems()
+    }
+  }, [open])
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -94,12 +69,12 @@ const CartItems = ({open, setOpen}:CartItemsProps)=> {
                       <div className="mt-8">
                         <div className="flow-root">
                           <ul role="list" className="-my-6 divide-y divide-gray-200">
-                            {products.map((product) => (
-                              <li key={product.id} className="flex py-6">
+                            {order_items.map((item) => (
+                              <li key={item.id} className="flex py-6">
                                 <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                                   <img
-                                    src={product.imageSrc}
-                                    alt={product.imageAlt}
+                                    src={`http://localhost:8000${item.cover_image}`}
+                                    alt={item.item.slug}
                                     className="h-full w-full object-cover object-center"
                                   />
                                 </div>
@@ -108,14 +83,13 @@ const CartItems = ({open, setOpen}:CartItemsProps)=> {
                                   <div>
                                     <div className="flex justify-between text-base font-medium text-gray-900">
                                       <h3>
-                                        <a href={product.href}> {product.name} </a>
+                                        <Link to={`/item-${item.item.slug}`}> {item.item.name} </Link>
                                       </h3>
-                                      <p className="ml-4">{product.price}</p>
+                                      <p className="ml-4">{item.item.price}</p>
                                     </div>
-                                    <p className="mt-1 text-sm text-gray-500">{product.color}</p>
                                   </div>
                                   <div className="flex flex-1 items-end justify-between text-sm">
-                                    <p className="text-gray-500">Qty {product.quantity}</p>
+                                    <p className="text-gray-500">Qty {item.quantity}</p>
 
                                     <div className="flex">
                                       <button
@@ -173,4 +147,11 @@ const CartItems = ({open, setOpen}:CartItemsProps)=> {
   )
 }
 
-export default CartItems;
+const mapStateToProps = (state:stateTypes)=> ({
+  cart: state.cart
+})
+
+const mapDispatchToProps = {
+  getCartItems
+}
+export default connect(mapStateToProps, mapDispatchToProps)(CartItems);

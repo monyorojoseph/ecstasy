@@ -13,7 +13,10 @@ class OrderItem(models.Model):
     quantity = models.PositiveIntegerField(default=1)
 
     def __str__(self):
-        return str(self.owner.email)
+        return str(self.item.name)
+    
+    def order_item_total_price(self):
+        return self.quantity * self.item.price
     
 class Order(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_orders')
@@ -22,3 +25,15 @@ class Order(models.Model):
 
     def __str__(self):
         return self.owner.email
+    
+    def total_price(self):
+        total = 0
+        for order_item in self.order_item.all():
+            total += order_item.order_item_total_price()
+        return total
+    
+    def total_order_items(self):
+        total = 0
+        for order_item in self.order_item.all():
+            total += order_item.quantity
+        return total

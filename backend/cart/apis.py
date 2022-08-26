@@ -7,14 +7,12 @@ from item.models import Item
 from .serializers import *
 from .models import *
 
-# Create your views here.
 class OrderItemAPI(viewsets.ModelViewSet):
     serializer_class = OrderItemSerialzer
     permission_classes = [IsAuthenticated]    
 
     @action(detail=False)
     def my_order_items(self, request, format=None):
-        print('Hey')
         order_items = request.user.user_order_items.filter(ordered=False)
         serializer = self.get_serializer(order_items, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -22,18 +20,55 @@ class OrderItemAPI(viewsets.ModelViewSet):
     @action(detail=False, methods=["POST"])
     def add_order_item(self, request, format=None):
         data = request.data
+        item = get_object_or_404(Item, slug=data['slug'])
         order_item, created = OrderItem.objects.get_or_create(
-            owner = request.user, ordered = False, item = get_object_or_404(Item, slug=data['slug'])
+            owner = request.user, ordered = False, item = item
         )
-
-        orders = request.user.user_orders.filter(ordered=False)
-
-        if orders:
-            orders = orders[0]
-            if orders.order_items.filter(order_items=order_item):
+        order_qs = request.user.user_orders.filter(ordered=False)
+        if order_qs.exists():
+            order= order_qs[0]
+            if order.order_items.filter(item__slug=item.slug).exists():
                 order_item.quantity += 1
-            orders.order_items.set(order_item)
+                order_item.save()
+                serializer = self.get_serializer(order_item, many=False)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                serializer = self.get_serializer(order_item, many=False)
+                return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            Order.objects.create(order_items = order_item)
-        
-        return Response(status=status.HTTP_200_OK)
+            order = Order.objects.create(owner=request.user)
+            order.order_items.add(order_item)        
+            serializer = self.get_serializer(order_item, many=False)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    @action(detail=False, methods=['POST'])
+    def remove_order_item(self, request, format=None):
+        data = request.data
+        item = get_object_or_404(Item, slug=data['slug'])
+        order_item = get_object_or_404(OrderItem, item=item)
+        order_qs = request.user.user_orders.filter(ordered=False)
+        if order_qs.exists():
+            order = order_qs[0]
+            if order.order_items.filter(item__slug=item.slug).exists():
+                order.order_items.remove(order_item)
+                return Response({"detail":"Removed Successfully"}, status=status.HTTP_200_OK)
+            return Response({"detail":"Not in your cart"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"details": "Your cart is empty"}, status=status.HTTP_404_NOT_FOUND)
+    
+
+
+class OrderAPI(viewsets.ModelViewSet):
+    serializer_class = OrderSerializer
+    permission_classes = [IsAuthenticated]
+    
+    @action(detail=True)
+    def my_order(self, request, format=None):
+        order_qs = request.user.user_orders.filter(ordered=False)
+        serializer = self.get_serializer(order_qs[0], many=False)
+        Response(serializer.data, status=status.HTTP_200_OK)
+    
+    @action(detail=False)
+    def order_item_total(self, request, format=None):
+        order_qs = request.user.user_orders.filter(ordered=False)
+        total =order_qs[0].total_order_items()
+        return Response({'total': total}, status=status.HTTP_200_OK)

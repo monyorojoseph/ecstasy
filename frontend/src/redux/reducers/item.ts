@@ -12,7 +12,6 @@ interface itemsTypes {
     price: number
     details: string
     cover_image: string
-    // [key: string]: number | string | itemImagesType[]
     images: itemImagesType[]
     [key: string]: any
 }
