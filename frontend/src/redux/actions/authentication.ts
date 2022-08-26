@@ -9,7 +9,7 @@ import { CREATED_USER_SUCCESFULLY, CREATE_USER, FAILED_TO_CREATE_USER, FAILED_TO
 export const createUser = (details: signupTypes)=> async(dispatch: Dispatch)=> {
     try{
         dispatch(CREATE_USER());
-        const { data } = await axios.post('http://localhost:8000/auth/users/', details, config)
+        const { data } = await axios.post('/auth/users/', details, config)
         dispatch(CREATED_USER_SUCCESFULLY())
         console.log(data)
     } catch(error){
@@ -22,7 +22,7 @@ export const createUser = (details: signupTypes)=> async(dispatch: Dispatch)=> {
 export const signIn = (details: signinTypes)=> async(dispatch: Dispatch)=> {
     try{
         dispatch(LOGIN_USER());
-        const { data } = await axios.post('http://localhost:8000/auth/jwt/create/', details, config)
+        const { data } = await axios.post('/auth/jwt/create/', details, config)
         localStorage.setItem('authCred', JSON.stringify(data))
         dispatch(LOGGED_IN_USER_SUCCESFULLY(data.access))
     } catch(error){
