@@ -22,26 +22,28 @@ function App() {
 
 
   return (
-    <BrowserRouter>
-      <Header setOpen={setOpen} />
-      <CartItems open={open} setOpen={setOpen} />
-      <Routes>    
-        <Route path="/" element={<Welcome />} />
-        <Route path="items" element={<Items />} />
-        <Route path="item-:slug" element={<ItemDetails />} />
-        <Route path="checkout" element={<Checkout />} />
-        <Route path="settings/" element={<ProtectedRoute><Settings /></ProtectedRoute>}>
-          <Route index element={<Profile />} />
-          <Route path="orders" element={<Orders />} />
-          <Route path="payment" element={<Payment />} />
-          <Route path="subscriptions" element={<Subscriptions />} />
-        </Route>
-        <Route path="reset-password" element={<ResetPassword />} />
-        <Route path="sign-in" element={<Signin />} />
-        <Route path="sign-up" element={<Signup />} />
-        <Route path="*" element={<NotFound/>} />
-      </Routes>
-    </BrowserRouter>
+    <div className="bg-slate-50 min-h-screen">
+      <BrowserRouter>
+        <Header setOpen={setOpen} />
+        <CartItems open={open} setOpen={setOpen} />
+        <Routes>    
+          <Route path="/" element={<Welcome />} />
+          <Route path="items" element={<Items />} />
+          <Route path="item-:slug" element={<ItemDetails />} />
+          <Route path="checkout" element={<Checkout />} />
+          <Route path="settings/" element={<ProtectedRoute><Settings /></ProtectedRoute>}>
+            <Route index element={<Profile />} />
+            <Route path="orders" element={<Orders />} />
+            <Route path="payment" element={<Payment />} />
+            <Route path="subscriptions" element={<Subscriptions />} />
+          </Route>
+          <Route path="reset-password" element={<ResetPassword />} />
+          <Route path="sign-in" element={<Signin />} />
+          <Route path="sign-up" element={<Signup />} />
+          <Route path="*" element={<NotFound/>} />
+        </Routes>
+      </BrowserRouter>
+    </div>
   )
 }
 

@@ -67,7 +67,7 @@ const Signin = ({signIn, authentication}: PropsType)=> {
                   onChange={changeHandler}
                   value={data.email}
                   required
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-orange-500 focus:border-orange-500 focus:z-10 sm:text-sm"
                   placeholder="Email address"
                 />
               </div>
@@ -83,7 +83,7 @@ const Signin = ({signIn, authentication}: PropsType)=> {
                   onChange={changeHandler}
                   value={data.password}
                   required
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-orange-500 focus:border-orange-500 focus:z-10 sm:text-sm"
                   placeholder="Password"
                 />
               </div>
@@ -92,7 +92,8 @@ const Signin = ({signIn, authentication}: PropsType)=> {
             <div>
               <button
                 type="submit"
-                className="relative w-full flex justify-center py-2 border border-transparent text-sm font-bold rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-indigo-500"
+                className="relative w-full flex justify-center py-2 border border-transparent text-lg md:text-sm font-bold rounded-md text-white 
+                bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-orange-500"
               >
                 Sign in
               </button>
@@ -100,7 +101,7 @@ const Signin = ({signIn, authentication}: PropsType)=> {
 
             <div className="flex items-start justify-between">
               <div className="text-sm">
-                <Link to="/reset-password" className="font-medium text-indigo-600 hover:text-indigo-500">
+                <Link to="/reset-password" className="font-medium text-orange-600 hover:text-orange-500">
                   Forgot your password?
                 </Link>
               </div>

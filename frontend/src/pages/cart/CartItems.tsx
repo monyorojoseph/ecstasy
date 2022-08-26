@@ -1,5 +1,3 @@
-import image1 from '../../assets/images/0_DSC_1715-1.jpg';
-import image2 from '../../assets/images/Chocolate-Chip-Cannabis-Cookie.jpg';
 import { Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
@@ -122,7 +120,7 @@ const CartItems = ({open, setOpen}:CartItemsProps)=> {
                                     <div className="flex">
                                       <button
                                         type="button"
-                                        className="font-medium text-indigo-600 hover:text-indigo-500"
+                                        className="font-medium text-red-500 hover:text-red-600"
                                       >
                                         Remove
                                       </button>
@@ -145,7 +143,8 @@ const CartItems = ({open, setOpen}:CartItemsProps)=> {
                       <div className="mt-6">
                         <Link to='/checkout'
                           onClick={()=>setOpen(false)}
-                          className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
+                          className="flex items-center justify-center rounded-md border border-transparent bg-orange-500 px-6 py-2 font-bold text-base 
+                          text-white shadow-sm hover:bg-orange-600"
                         >
                           Checkout
                         </Link>
@@ -155,7 +154,7 @@ const CartItems = ({open, setOpen}:CartItemsProps)=> {
                           or{' '}
                           <button
                             type="button"
-                            className="font-medium text-indigo-600 hover:text-indigo-500"
+                            className="font-medium text-orange-600 hover:text-orange-500"
                             onClick={() => setOpen(false)}
                           >
                             Continue Shopping<span aria-hidden="true"> &rarr;</span>

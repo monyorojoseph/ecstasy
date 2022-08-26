@@ -8,7 +8,7 @@ import {
 export const getItems = ()=> async(dispatch: Dispatch)=> {
     try{
         dispatch(GET_ITEMS())
-        const { data } = await axios.get('')
+        const { data } = await axios.get('http://localhost:8000/item/items')
         dispatch(GOT_ITEMS_SUCCESFULLY(data))
     }catch(error){
         dispatch(FAILED_TO_GET_ITEMS())
@@ -20,7 +20,7 @@ export const getItems = ()=> async(dispatch: Dispatch)=> {
 export const getItemDetails = (slug: string)=> async(dispatch: Dispatch)=> {
     try{
         dispatch(GET_ITEM())
-        const { data } = await axios.get('')
+        const { data } = await axios.get(`http://localhost:8000/item/item-details/${slug}`)
         dispatch(GOT_ITEM_SUCCESFULLY(data))
     }catch(error){
         dispatch(FAILED_TO_GET_ITEM())

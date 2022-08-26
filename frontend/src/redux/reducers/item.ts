@@ -1,12 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+export interface itemImagesType {
+    id: string | number
+    item: string | number
+    image: string
+}
+
 interface itemsTypes {
     name: string
     slug: string
     price: number
     details: string
     cover_image: string
-    [key: string]: number | string
+    // [key: string]: number | string | itemImagesType[]
+    images: itemImagesType[]
+    [key: string]: any
 }
 
 export interface itemReducerTypes {
@@ -22,7 +30,8 @@ const initialState: itemReducerTypes = {
         slug: '',
         price: 0,
         details: '',
-        cover_image: ''      
+        cover_image: '',
+        images: []    
     },
     goodies: []
 }

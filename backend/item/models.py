@@ -17,6 +17,7 @@ class Item(models.Model):
     price = models.PositiveIntegerField()
     category = models.ManyToManyField(Category, related_name='item_category', blank=True)
     details = models.TextField()
+    # add highlight descritpion
     slug = models.CharField(unique=True, max_length=100, null=True, blank=True)
     
     def __str__(self) -> str:
