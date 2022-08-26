@@ -19,7 +19,7 @@ const Welcome = ({getItems, item}: PropsType)=> {
     }, [])
     return (
         <div className="container mx-auto pb-5">
-            <div className="px-3 md:px-0 space-y-4 mb-5">
+            <div className="px-3 xl:px-0 space-y-4 mb-5">
                 {/* preview */}
                 <div className="space-y-4">
                     <div className="space-y-3">

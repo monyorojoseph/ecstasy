@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 
     'user',
     'item.apps.ItemConfig',
+    'cart',
 
     'rest_framework',
     'djoser',
