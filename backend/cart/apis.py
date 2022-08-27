@@ -33,6 +33,7 @@ class OrderItemAPI(viewsets.ModelViewSet):
                 serializer = self.get_serializer(order_item, many=False)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
+                order.order_items.add(order_item)    
                 serializer = self.get_serializer(order_item, many=False)
                 return Response(serializer.data, status=status.HTTP_200_OK)
         else:
@@ -45,15 +46,33 @@ class OrderItemAPI(viewsets.ModelViewSet):
     def remove_order_item(self, request, format=None):
         data = request.data
         item = get_object_or_404(Item, slug=data['slug'])
-        order_item = get_object_or_404(OrderItem, item=item)
         order_qs = request.user.user_orders.filter(ordered=False)
         if order_qs.exists():
             order = order_qs[0]
+            order_item = request.user.user_order_items.filter(item=item, ordered=False)[0]
             if order.order_items.filter(item__slug=item.slug).exists():
-                order.order_items.remove(order_item)
-                return Response({"detail":"Removed Successfully"}, status=status.HTTP_200_OK)
+                if order_item.quantity > 1:
+                    order_item.quantity -= 1
+                    order_item.save()
+                    serializer = self.get_serializer(order_item, many=False)
+                    return Response(serializer.data, status=status.HTTP_200_OK)
+                else:                        
+                    order.order_items.remove(order_item)
+                    order_item.delete()
+                    return Response({"detail":"Removed Successfully"}, status=status.HTTP_200_OK)
             return Response({"detail":"Not in your cart"}, status=status.HTTP_404_NOT_FOUND)
         return Response({"details": "Your cart is empty"}, status=status.HTTP_404_NOT_FOUND)
+    
+    # check if order item exist or not
+    @action(detail=True, methods=['POST'])
+    def get_order_item(self, request, format=None):
+        item = get_object_or_404(Item, slug=request.data['slug'])        
+        order_item = request.user.user_order_items.filter(item=item, ordered=False)
+        if order_item.exists():
+            serializer = self.get_serializer(order_item[0], many=False)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
     
 
 
@@ -65,10 +84,15 @@ class OrderAPI(viewsets.ModelViewSet):
     def my_order(self, request, format=None):
         order_qs = request.user.user_orders.filter(ordered=False)
         serializer = self.get_serializer(order_qs[0], many=False)
-        Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
     @action(detail=False)
     def order_item_total(self, request, format=None):
         order_qs = request.user.user_orders.filter(ordered=False)
         total =order_qs[0].total_order_items()
         return Response({'total': total}, status=status.HTTP_200_OK)
+    
+    # checkout
+    @action(detail=False, methods=['POST'])
+    def checkout(self, request, format=None):
+        pass

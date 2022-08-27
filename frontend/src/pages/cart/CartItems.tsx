@@ -4,23 +4,26 @@ import { XIcon } from '@heroicons/react/outline'
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { stateTypes } from '../../interface_types/state';
-import { getCartItems } from '../../redux/actions/cart';
+import { getCartItems, removeItemFromCart } from '../../redux/actions/cart';
 import { cartReducerType } from '../../redux/reducers/cart';
+import { totalPrice } from '../../utils/price';
+import { getCurrencyFormat } from '../../utils/formatCurrency';
 
 interface PropsTyep {
   open: boolean
   setOpen: Function
   getCartItems: Function
   cart: cartReducerType
+  removeItemFromCart: Function
 }
 
-const CartItems = ({open, setOpen, getCartItems, cart}:PropsTyep)=> {
-  const { loading, order_items } = cart
+const CartItems = ({open, setOpen, getCartItems, cart, removeItemFromCart}:PropsTyep)=> {
+  const { loading, order_items, order_item: { quantity}, removing } = cart
   useEffect(()=> {
     if (open){
       getCartItems()
     }
-  }, [open])
+  }, [open, quantity])
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -85,16 +88,20 @@ const CartItems = ({open, setOpen, getCartItems, cart}:PropsTyep)=> {
                                       <h3>
                                         <Link to={`/item-${item.item.slug}`}> {item.item.name} </Link>
                                       </h3>
-                                      <p className="ml-4">{item.item.price}</p>
+                                      <p className="ml-4">{getCurrencyFormat(item.item.price)}</p>
                                     </div>
                                   </div>
                                   <div className="flex flex-1 items-end justify-between text-sm">
                                     <p className="text-gray-500">Qty {item.quantity}</p>
-
-                                    <div className="flex">
+                                    <h6 className='font-bold'>{getCurrencyFormat(item.item_total_price)}</h6>
+                                  </div>
+                                  <div>
+                                    <div className="flex text-sm py-2">
                                       <button
                                         type="button"
-                                        className="font-medium text-red-500 hover:text-red-600"
+                                        disabled={removing}
+                                        className="font-medium disabled:text-slate-400 text-red-500 hover:text-red-600"
+                                        onClick={()=> removeItemFromCart({slug:item.item.slug})}
                                       >
                                         Remove
                                       </button>
@@ -111,7 +118,7 @@ const CartItems = ({open, setOpen, getCartItems, cart}:PropsTyep)=> {
                     <div className="border-t border-gray-200 py-6 px-4 sm:px-6">
                       <div className="flex justify-between text-base font-medium text-gray-900">
                         <p>Subtotal</p>
-                        <p>$262.00</p>
+                        <p>{totalPrice(order_items)}</p>
                       </div>
                       <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
                       <div className="mt-6">
@@ -152,6 +159,6 @@ const mapStateToProps = (state:stateTypes)=> ({
 })
 
 const mapDispatchToProps = {
-  getCartItems
+  getCartItems, removeItemFromCart
 }
 export default connect(mapStateToProps, mapDispatchToProps)(CartItems);

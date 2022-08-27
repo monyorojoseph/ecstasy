@@ -1,10 +1,12 @@
-import { Fragment } from 'react'
+import { Fragment, useEffect } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { ShoppingCartIcon, UserCircleIcon } from '@heroicons/react/solid'
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { stateTypes } from '../interface_types/state';
 import { authenticationReducerTypes } from '../redux/reducers/authentication';
+import { cartReducerType } from '../redux/reducers/cart';
+import { getTotalItemsInCart } from '../redux/actions/cart';
 
 
 function classNames(...classes: any) {
@@ -13,11 +15,18 @@ function classNames(...classes: any) {
 
 interface HeaderProps {
   setOpen: Function
+  getTotalItemsInCart: Function
   authentication: authenticationReducerTypes
+  cart: cartReducerType
 }
-const Header = ({setOpen, authentication}:HeaderProps)=> {
+const Header = ({setOpen, getTotalItemsInCart, authentication, cart}:HeaderProps)=> {
   const { token } = authentication
-
+  const { total, order_item: { quantity} } = cart
+  useEffect(()=> {
+    if(token){
+      getTotalItemsInCart()
+    }
+  }, [token, quantity])
   return (
         <nav className='shadow-md mb-3 sticky top-0 bg-white'>
           <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
@@ -45,7 +54,7 @@ const Header = ({setOpen, authentication}:HeaderProps)=> {
                       className="p-1 static"
                       onClick={()=>setOpen(true)}
                     >
-                    <h6 className='absolute -top-2 -right-1 text-lg md:text-sm font-bold text-orange-600'>5</h6>
+                    <h6 className='absolute -top-2 -right-1 text-lg md:text-sm font-bold text-orange-600'>{total.total}</h6>
                     <ShoppingCartIcon className="h-7 w-7 inline-block text-slate-500"/>
                     </button>
                   </div>
@@ -108,10 +117,11 @@ const Header = ({setOpen, authentication}:HeaderProps)=> {
 }
 
 const mapStateToProps =(state:stateTypes)=> ({
-  authentication: state.authentication
+  authentication: state.authentication,
+  cart: state.cart
 })
 
 const mapDispatchToProps = {
-
+  getTotalItemsInCart
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

@@ -11,7 +11,7 @@ const initialState: authenticationReducerTypes = {
     creating: false,
     loading: false,
     created: false,
-    token: localStorage.getItem('authCred') ? JSON.parse(localStorage.getItem('authCred')).access : '',
+    token: JSON.parse(localStorage.getItem('authCred') || '{}').access,
 }
 
 const authenticationReducer = createSlice({

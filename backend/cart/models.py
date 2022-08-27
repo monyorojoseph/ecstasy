@@ -28,12 +28,12 @@ class Order(models.Model):
     
     def total_price(self):
         total = 0
-        for order_item in self.order_item.all():
+        for order_item in self.order_items.all():
             total += order_item.order_item_total_price()
         return total
     
     def total_order_items(self):
         total = 0
-        for order_item in self.order_item.all():
+        for order_item in self.order_items.all():
             total += order_item.quantity
         return total

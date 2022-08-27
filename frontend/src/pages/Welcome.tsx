@@ -5,6 +5,7 @@ import { stateTypes } from "../interface_types/state";
 import { itemReducerTypes } from "../redux/reducers/item";
 import { getItems } from '../redux/actions/item'
 import { useEffect } from "react";
+import { getCurrencyFormat } from "../utils/formatCurrency";
 
 interface PropsType{
     getItems: Function
@@ -70,8 +71,8 @@ const Welcome = ({getItems, item}: PropsType)=> {
                                 />
                             </div>
                             <h3 className="mt-4 text-sm text-gray-700">{goodie.name}</h3>
-                            <p className="mt-1 text-sm text-gray-500">{goodie.category}</p>
-                            <p className="mt-1 text-lg font-medium text-gray-900">{goodie.price}</p>
+                            <p className="mt-1 text-sm text-gray-500">{goodie.category.map((name)=>name.name)}</p>
+                            <p className="mt-1 text-lg font-medium text-gray-900">{getCurrencyFormat(goodie.price)}</p>
                             </Link>
                         ))}
                     </div>

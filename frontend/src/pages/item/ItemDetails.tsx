@@ -5,6 +5,11 @@ import { useParams } from 'react-router-dom'
 import { stateTypes } from '../../interface_types/state'
 import { itemImagesType, itemReducerTypes } from '../../redux/reducers/item'
 import { getItemDetails } from '../../redux/actions/item'
+import { getCurrencyFormat } from '../../utils/formatCurrency'
+import { authenticationReducerTypes } from '../../redux/reducers/authentication'
+import { getOrderItem, addItemToCart, removeItemFromCart } from '../../redux/actions/cart'
+import { cartReducerType } from '../../redux/reducers/cart'
+import { MinusIcon, PlusIcon } from '@heroicons/react/outline'
 
 const reviews = { href: '#', average: 4, totalCount: 117 }
 
@@ -14,16 +19,38 @@ function classNames(...classes:any) {
 
 interface PropsType {
   getItemDetails: Function
+  getOrderItem: Function
   item: itemReducerTypes
+  authentication: authenticationReducerTypes
+  cart: cartReducerType
+  addItemToCart:Function 
+  removeItemFromCart: Function 
 }
 
-const ItemDetails = ({getItemDetails, item}: PropsType)=> {
+const ItemDetails = ({getItemDetails, item, authentication, getOrderItem, cart, addItemToCart, removeItemFromCart }: PropsType)=> {
   let params = useParams()
   const { loading, goodie } = item 
+  const { token } = authentication
+  const { order_item, adding, removing } = cart
+
+  const addOrderItemHandler = ()=> {
+    console.log("Added")
+    addItemToCart({slug: params.slug})
+  }
+
+  const removeOrderItemHandler = ()=> {
+    console.log("Removed")
+    removeItemFromCart({slug: params.slug})
+  }
 
   useEffect(()=> {
     getItemDetails(params.slug)
-  }, [])
+
+    if (token){
+      getOrderItem({slug:params.slug})
+    }
+    
+  }, [token])
 
   return (
     <div className="container mx-auto">
@@ -54,7 +81,7 @@ const ItemDetails = ({getItemDetails, item}: PropsType)=> {
           {/* Options */}
           <div className="mt-4 lg:mt-0 lg:row-span-3">
             <h2 className="sr-only">goodie information</h2>
-            <p className="tracking-tight text-3xl text-gray-900">{goodie.price}</p>
+            <p className="tracking-tight text-3xl text-gray-900">{getCurrencyFormat(goodie.price)}</p>
 
             {/* Reviews */}
             <div className="mt-6">
@@ -79,18 +106,40 @@ const ItemDetails = ({getItemDetails, item}: PropsType)=> {
               </div>
             </div>
 
-            <form className="mt-10">
+            <div className="mt-10">
 
-
-              <button
-                type="submit"
-                className="mt-10 w-full bg-orange-500 border border-transparent rounded-md py-2 px-8 flex items-center 
-                justify-center text-lg md:text-sm font-bold text-white hover:bg-orange-600 focus:outline-none focus:ring-2 
-                focus:ring-offset-2 focus:ring-orange-500"
-              >
-                Add to cart
-              </button>
-            </form>
+              {
+                order_item.quantity > 0 ? 
+                (
+                  <div 
+                  className="flex justify-between space-x-3">
+                    <div className='flex justify-center space-x-3'>
+                      <button disabled={adding} onClick={addOrderItemHandler} className="border p-2 font-bold bg-orange-500 disabled:opacity-75 rounded-lg">
+                        <PlusIcon className='h-3 w-3' />
+                      </button>
+                      <h6 className="font-bold">{order_item.quantity}</h6>
+                      <button disabled={removing} onClick={removeOrderItemHandler} className="border p-2 font-bold bg-red-500 disabled:opacity-75 rounded-lg">
+                        <MinusIcon className='h-3 w-3' />
+                      </button>
+                    </div>
+                    <div>
+                      <h6 className="font-bold text-slate-400">{getCurrencyFormat(order_item.item_total_price)}</h6>
+                    </div>
+                  </div>
+                ) :
+                (
+                <button
+                  type="button"
+                  onClick={addOrderItemHandler}
+                  className="mt-10 w-full bg-orange-500 border border-transparent rounded-md py-2 px-8 flex items-center 
+                  justify-center text-lg md:text-sm font-bold text-white hover:bg-orange-600 focus:outline-none focus:ring-2 
+                  focus:ring-offset-2 focus:ring-orange-500"
+                >
+                  Add to cart
+                </button>
+              )
+              }
+            </div>
           </div>
 
           <div className="py-10 lg:pt-6 lg:pb-16 lg:col-start-1 lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
@@ -132,10 +181,12 @@ const ItemDetails = ({getItemDetails, item}: PropsType)=> {
 }
 
 const mapStateToProps = (state:stateTypes)=> ({
-  item: state.item
+  item: state.item,
+  authentication: state.authentication,
+  cart: state.cart
 })
 
 const mapDispatchToProps = {
-  getItemDetails
+  getItemDetails, getOrderItem, addItemToCart, removeItemFromCart 
 }
 export default connect(mapStateToProps, mapDispatchToProps)(ItemDetails);

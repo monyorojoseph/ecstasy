@@ -28,7 +28,6 @@ const Signin = ({signIn, authentication}: PropsType)=> {
 
   const submitHandler = (e:React.SyntheticEvent)=> {
     e.preventDefault()
-    console.log(data)
     signIn(data)
   }
   let location = useLocation()

@@ -6,6 +6,7 @@ class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
         fields = "__all__"
+        depth = 1
     def get_cover_image(self, obj):
         return obj.item_image.all()[0].image.url
 

@@ -19,7 +19,7 @@ class OrderSerializer(serializers.ModelSerializer):
     total_price = serializers.SerializerMethodField()
     class Meta:
         model = Order
-        fields = ['ordererd', 'order_items', 'total_price']
+        fields = ['ordered', 'order_items', 'total_price']
     
     def get_total_price(self, obj):
         return obj.total_price()   
