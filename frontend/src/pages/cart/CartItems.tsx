@@ -8,6 +8,7 @@ import { getCartItems, removeItemFromCart } from '../../redux/actions/cart';
 import { cartReducerType } from '../../redux/reducers/cart';
 import { totalPrice } from '../../utils/price';
 import { getCurrencyFormat } from '../../utils/formatCurrency';
+import Loading from '../../components/Loading';
 
 interface PropsTyep {
   open: boolean
@@ -69,7 +70,10 @@ const CartItems = ({open, setOpen, getCartItems, cart, removeItemFromCart}:Props
                         </div>
                       </div>
 
-                      <div className="mt-8">
+                      {
+                      loading ? 
+                      (<Loading />):
+                      (<div className="mt-8">
                         <div className="flow-root">
                           <ul role="list" className="-my-6 divide-y divide-gray-200">
                             {order_items.map((item) => (
@@ -112,7 +116,8 @@ const CartItems = ({open, setOpen, getCartItems, cart, removeItemFromCart}:Props
                             ))}
                           </ul>
                         </div>
-                      </div>
+                      </div>)
+                      }
                     </div>
 
                     <div className="border-t border-gray-200 py-6 px-4 sm:px-6">

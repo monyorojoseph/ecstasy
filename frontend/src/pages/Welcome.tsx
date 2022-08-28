@@ -1,4 +1,3 @@
-import axios from "axios";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { stateTypes } from "../interface_types/state";
@@ -6,6 +5,7 @@ import { itemReducerTypes } from "../redux/reducers/item";
 import { getItems } from '../redux/actions/item'
 import { useEffect } from "react";
 import { getCurrencyFormat } from "../utils/formatCurrency";
+import Loading from "../components/Loading";
 
 interface PropsType{
     getItems: Function
@@ -59,23 +59,28 @@ const Welcome = ({getItems, item}: PropsType)=> {
                         <h6>Recent goodies</h6>                        
                         <h6><Link to='/items' className="hover:text-orange-400">View all</Link></h6>
                     </div>
-
-                    <div className="grid grid-cols-1 gap-y-7 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-                        {goodies.slice(0, 4).map((goodie) => (
-                            <Link key={goodie.slug} to={`/item-${goodie.slug}`} className="group">
-                            <div className="w-full aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden xl:aspect-w-7 xl:aspect-h-8">
-                                <img
-                                src={`http://localhost:8000/${goodie.cover_image}`}
-                                alt={goodie.slug}
-                                className="w-full object-center object-cover group-hover:opacity-75 h-32 md:h-40"
-                                />
-                            </div>
-                            <h3 className="mt-4 text-sm text-gray-700">{goodie.name}</h3>
-                            <p className="mt-1 text-sm text-gray-500">{goodie.category.map((name)=>name.name)}</p>
-                            <p className="mt-1 text-lg font-medium text-gray-900">{getCurrencyFormat(goodie.price)}</p>
-                            </Link>
-                        ))}
-                    </div>
+                    {
+                        loading ? 
+                        (<Loading />) :
+                        (
+                        <div className="grid grid-cols-1 gap-y-7 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+                            {goodies.slice(0, 4).map((goodie) => (
+                                <Link key={goodie.slug} to={`/item-${goodie.slug}`} className="group">
+                                <div className="w-full aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden xl:aspect-w-7 xl:aspect-h-8">
+                                    <img
+                                    src={`http://localhost:8000/${goodie.cover_image}`}
+                                    alt={goodie.slug}
+                                    className="w-full object-center object-cover group-hover:opacity-75 h-32 md:h-40"
+                                    />
+                                </div>
+                                <h3 className="mt-4 text-sm text-gray-700">{goodie.name}</h3>
+                                <p className="mt-1 text-sm text-gray-500">{goodie.category.map((name)=>name.name)}</p>
+                                <p className="mt-1 text-lg font-medium text-gray-900">{getCurrencyFormat(goodie.price)}</p>
+                                </Link>
+                            ))}
+                        </div>
+                        )
+                    }
                 </div>
                 {/* list subscriptions */}
 
