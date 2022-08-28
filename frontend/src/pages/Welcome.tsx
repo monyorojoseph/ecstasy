@@ -87,9 +87,9 @@ const Welcome = ({getItems, item}: PropsType)=> {
                     <div 
                     className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 lg:px-10">
                         <div className="rounded-md shadow-md text-center space-y-4 bg-slate-50 py-4">
-                            <h6 className="font-extrabold text-xl">Weekly</h6>
+                            <h6 className="font-extrabold text-xl">Year</h6>
                             <p className="p-3">
-                                Get weekly delivery of available goodie or package of your choice
+                                Get Year delivery of available goodie or package of your choice
                             </p>
                             <button className="rounded-full bg-slate-200 py-1 px-3 shadow-md font-bold">
                                 Check them ?
@@ -97,7 +97,7 @@ const Welcome = ({getItems, item}: PropsType)=> {
                         </div>
 
                         <div className="rounded-md shadow-md text-center space-y-4 bg-slate-50 py-4">
-                            <h6 className="font-extrabold text-xl">Monthly</h6>
+                            <h6 className="font-extrabold text-xl">Month</h6>
                             <p className="p-3">
                                 Get monthly delivery of available goodie or package of your choice
                             </p>

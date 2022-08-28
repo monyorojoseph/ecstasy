@@ -1,8 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
-from django.contrib.auth import get_user_model
+from django.conf import settings
 
-User = get_user_model()
+User = settings.AUTH_USER_MODEL
 # Create your models here.
 
 class CustomUserManager(BaseUserManager):
@@ -48,12 +48,3 @@ class CustomUser(AbstractBaseUser):
     @property
     def is_staff(self):
         return self.is_admin    
-
-class ShippingAddress(models.Model):
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_shipping_address')
-    town = models.CharField(default='Nairobi', max_length=100)
-    # longtitude =
-    # latitude = 
-
-    def __str__(self):
-        return self.town

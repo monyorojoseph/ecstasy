@@ -19,7 +19,17 @@ class OrderSerializer(serializers.ModelSerializer):
     total_price = serializers.SerializerMethodField()
     class Meta:
         model = Order
-        fields = ['ordered', 'order_items', 'total_price']
+        fields = ['ordered', 'order_items', 'total_price', 'payment', 'checkout', 'shipping_address']
     
     def get_total_price(self, obj):
         return obj.total_price()   
+
+class PaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = "__all__"
+
+class ShippingAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ShippingAddress
+        fields = "__all__"

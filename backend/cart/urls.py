@@ -8,5 +8,8 @@ urlpatterns = [
     path('remove-order-item', OrderItemAPI.as_view({'post': 'remove_order_item'}), name='remove_order_item'),
     path("get-order-item", OrderItemAPI.as_view({'post': 'get_order_item'}), name="get_order_item"),
     path('total-order-items', OrderAPI.as_view({'get':'order_item_total'}), name='order_item_total'),
-    path('my-order', OrderAPI.as_view({'get': 'my_order'}), name='my_order')
+    path('my-order', OrderAPI.as_view({'get': 'my_order'}), name='my_order'),
+    path('checkout', OrderAPI.as_view({'post': 'checkout'}), name='checkout'),
+    path('payment', OrderAPI.as_view({'post': 'payment'}), name='payment')
+
 ]

@@ -93,6 +93,45 @@ class OrderAPI(viewsets.ModelViewSet):
         return Response({'total': total}, status=status.HTTP_200_OK)
     
     # checkout
+    """ user adds shipping address to the order """
     @action(detail=False, methods=['POST'])
     def checkout(self, request, format=None):
-        pass
+        data = request.data
+        order = request.user.user_orders.get(ordered=False)
+        shipping_address = ShippingAddress.objects.create(
+            owner = request.user,
+            town = data['town'], 
+            # longtitude =
+            # latitude =                        
+        )
+        delivery_plan = DeliveryPlan.objects.get(name=data['delivery_plan'])
+        order.shipping_address.add(shipping_address)
+        order.delivery_plan.add(delivery_plan)
+        order.checkout = True
+        order.save()
+        return Response({'detail': 'Shipping address and delivery plan saved'}, status=status.HTTP_200_OK)
+
+    # payment
+    """ user confirms payment for the order"""
+    @action(detail=False, methods=['POST'])
+    def payment(self, request, format=None):
+        data = request.data
+        order = request.user.user_orders.get(ordered=False)
+        payment = Payment.objects.create(
+            owner = request.user,
+            amount = order.total_price() + order.delivery_plan.cost,
+            token = data['token'],
+            received_payment = False           
+        )
+        order.payment = payment
+        order.order_items.update(ordered=True)
+        for order_item in order.order_items.all():
+            order_item.save()
+        order.ordered = True
+        order.save()
+        return Response({'detail': 'Order made succesfully'}, status=status.HTTP_200_OK)
+
+""" Coinbase payment webhook to verify that payment has been received """
+
+def verify_coinbase_payment():
+    pass
