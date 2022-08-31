@@ -1,6 +1,7 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { RadioGroup, Disclosure } from '@headlessui/react'
 import { ChevronRightIcon } from "@heroicons/react/outline";
+import { useGeolocated } from "react-geolocated";
 // import { classNames } from '../../utils/combineClassNames'
 
 
@@ -8,6 +9,26 @@ const deliverys = ['One hour', 'Six hours', 'One day']
 
 const Checkout = ()=> {
     const [delivery, setdelivery] = useState(deliverys[0])
+    const [town, setTown] = useState<string>('')
+    const [longitude, setLongitude] = useState<number>()
+    const [latitude, setLatitude] = useState<number>()
+    const [defaultAddress, setDefaultAddress] = useState<boolean>(false)
+    const [defaultDeliverPlan, setDefaultDeliveryPlan] = useState<boolean>(false)
+    
+    const { coords, isGeolocationAvailable, isGeolocationEnabled } =
+    useGeolocated({
+        positionOptions: {
+            enableHighAccuracy: false,
+        },
+        userDecisionTimeout: 5000,
+    });
+
+
+    const submitHandler = (e:React.SyntheticEvent)=> {
+        e.preventDefault()
+        console.log({delivery, town, longitude, latitude,  defaultAddress, defaultDeliverPlan})
+    }
+
 
     return (
         <>
@@ -44,21 +65,50 @@ const Checkout = ()=> {
                                 </Disclosure>
                             </div>
                             <div>
-                                <form className="mt-4 space-y-6">
-                                <div className="space-y-px">
-                                    <div className="space-y-1">
-                                        <label>Town</label>
-                                        <p className="font-bold">if from Nairobi please select locate me</p>
-                                        <input name="town" type="text" 
-                                        required className="appearance-none relative rounded-md block w-full px-3 py-2 border border-gray-300 
-                                        placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-orange-500 focus:border-orange-500 
-                                        focus:z-10 sm:text-sm" placeholder="your town please ?" />
-                                        <button className="text-sm text-red-500">Locate me ?</button>
+                                <form className="mt-4 space-y-6" onSubmit={submitHandler}>
+                                <div className="space-y-4">
+                                    <div className="space-y-4">
+                                        <div className="space-y-1">
+                                            <label>Town</label>
+                                            <input name="town" type="text" 
+                                            value={town} onChange={(e)=> setTown(e.target.value)}
+                                            required className="appearance-none relative rounded-md block w-full px-3 py-2 border border-gray-300 
+                                            placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-orange-500 focus:border-orange-500 
+                                            focus:z-10 sm:text-sm" placeholder="your town please ?" />
+                                        </div>
+                                        <div>
+                                            <button type="button" 
+                                            className="bg-slate-600 rounded-md shadow-md px-3 py-1 text-white font-bold">
+                                                Locate me ?
+                                            </button>
+                                        </div>
+                                        <div className="flex items-center">
+                                            <input
+                                            name="set-default-address"
+                                            type="checkbox"
+                                            defaultChecked={defaultAddress} onChange={()=> setDefaultAddress(!defaultAddress)}
+                                            className="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500"
+                                            />
+                                            <label className="ml-2 block text-sm text-gray-900">
+                                            Set as default address
+                                            </label>
+                                        </div>
                                     </div>
-                                    <div>      
+                                    <div className="flex items-center">
+                                        <input
+                                        name="use-default-address"
+                                        type="checkbox"
+                                        // defaultChecked
+                                        className="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500"
+                                        />
+                                        <label className="ml-2 block text-sm text-gray-900">
+                                        Use default address
+                                        </label>
+                                    </div>
+                                    <div className="space-y-4">      
                                         <RadioGroup value={delivery} onChange={setdelivery} className="space-y-2" name="delivery">
                                             <RadioGroup.Label
-                                            className='font-medium text-lg'>Delivery in ?</RadioGroup.Label>
+                                            className='font-medium text-lg'>Delivery plan options ?</RadioGroup.Label>
                                             <div className="space-y-2">
                                             {deliverys.map((delivery) => (
                                                 <RadioGroup.Option key={delivery} value={delivery}
@@ -72,9 +122,32 @@ const Checkout = ()=> {
                                             ))}
                                             </div>
                                         </RadioGroup>
+
+                                        <div className="flex items-center">
+                                            <input
+                                            name="set-default-delivery-plan"
+                                            type="checkbox"
+                                            defaultChecked={defaultDeliverPlan} onChange={()=> setDefaultDeliveryPlan(!defaultDeliverPlan)}
+                                            className="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500"
+                                            />
+                                            <label className="ml-2 block text-sm text-gray-900">
+                                            Set as default delivery plan
+                                            </label>
+                                        </div>                                        
+                                    </div>
+
+                                    <div className="flex items-center">
+                                        <input
+                                        name="use-default-delivery-plan"
+                                        type="checkbox"
+                                        // defaultChecked
+                                        className="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500"
+                                        />
+                                        <label className="ml-2 block text-sm text-gray-900">
+                                        Use default delivery plan
+                                        </label>
                                     </div>
                                 </div>
-
                                 <div>
                                     <button type="submit" 
                                     className="py-2 px-4 border border-transparent text-lg md:text-sm rounded-md 
