@@ -1,3 +1,4 @@
+from email.policy import default
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
@@ -98,18 +99,33 @@ class OrderAPI(viewsets.ModelViewSet):
     def checkout(self, request, format=None):
         data = request.data
         order = request.user.user_orders.get(ordered=False)
-        shipping_address = ShippingAddress.objects.create(
-            owner = request.user,
-            town = data['town'], 
-            # longtitude =
-            # latitude =                        
-        )
-        delivery_plan = DeliveryPlan.objects.get(name=data['delivery_plan'])
-        order.shipping_address.add(shipping_address)
-        order.delivery_plan.add(delivery_plan)
+
+        # check if set default address and remove the other default if it exists
+        if data['defaultAddress']:
+            qs = request.user.user_shipping_address.filter(default=True)
+            if qs.exists():
+                addr = qs[0]
+                addr.default = False
+                addr.save()
+
+        # check if use default address
+        if data['useDefaultAddress']:
+            shipping_address = request.user.user_shipping_address.get(default=True)
+        else:
+            shipping_address = ShippingAddress.objects.create(
+                owner = request.user,
+                town = data['town'], 
+                default = data['defaultAddress']
+                # longtitude =
+                # latitude =                        
+            )
+
+        delivery_plan = DeliveryPlan.objects.get(id=data['delivery'])
+        order.shipping_address = shipping_address
+        order.delivery_plan = delivery_plan
         order.checkout = True
         order.save()
-        return Response({'detail': 'Shipping address and delivery plan saved'}, status=status.HTTP_200_OK)
+        return Response({'checkout': order.checkout}, status=status.HTTP_200_OK)
 
     # payment
     """ user confirms payment for the order"""
@@ -130,6 +146,23 @@ class OrderAPI(viewsets.ModelViewSet):
         order.ordered = True
         order.save()
         return Response({'detail': 'Order made succesfully'}, status=status.HTTP_200_OK)
+
+class DeliveryPlanAPI(viewsets.ModelViewSet):
+    serializer_class = DeliveryPlanSerializer
+    queryset = DeliveryPlan.objects.all()
+
+class ShippingAddressAPI(viewsets.ModelViewSet):
+    serializer_class = ShippingAddressSerializer
+    permission_classes = [IsAuthenticated]
+
+    # check user has default address and return it
+    @action(detail=True)
+    def get_user_default_address(self, request, format=None):
+        address = request.user.user_shipping_address.filter(default=True)
+        if address.exists():
+            serializer = self.get_serializer(address[0], many=False)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 """ Coinbase payment webhook to verify that payment has been received """
 

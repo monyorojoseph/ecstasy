@@ -10,6 +10,7 @@ urlpatterns = [
     path('total-order-items', OrderAPI.as_view({'get':'order_item_total'}), name='order_item_total'),
     path('my-order', OrderAPI.as_view({'get': 'my_order'}), name='my_order'),
     path('checkout', OrderAPI.as_view({'post': 'checkout'}), name='checkout'),
-    path('payment', OrderAPI.as_view({'post': 'payment'}), name='payment')
-
+    path('payment', OrderAPI.as_view({'post': 'payment'}), name='payment'),
+    path('delivery-plans', DeliveryPlanAPI.as_view({'get': 'list'}), name='delivery_plans'),
+    path('default-address', ShippingAddressAPI.as_view({'get': 'get_user_default_address'}), name='get_user_default_address')
 ]

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { getCartItems } from  '../../redux/actions/cart'
 import { Disclosure } from '@headlessui/react';
 import { ChevronRightIcon } from '@heroicons/react/outline';
@@ -20,6 +20,7 @@ const Payment = ({getCartItems, cart}: PropTypes) => {
     const { loading, order_items } = cart
 
     useEffect(()=> {
+
         getCartItems()
     }, [])
 
@@ -41,7 +42,10 @@ const Payment = ({getCartItems, cart}: PropTypes) => {
                                         />
                                     </Disclosure.Button>
                                     <Disclosure.Panel className="text-gray-500">
-                                        <ul className="list-none divide-y space-y-2 border rounded-lg">
+                                        {
+                                        loading ? 
+                                        (<h6 className='font-bold'>Loading ...</h6>):
+                                        (<ul className="list-none divide-y space-y-2 border rounded-lg">
                                             {
                                                 order_items.map((order_item)=> (
                                                     <li className="px-4" key={order_item.id}>
@@ -53,7 +57,7 @@ const Payment = ({getCartItems, cart}: PropTypes) => {
                                                     </li>
                                                 ))
                                             }
-                                        </ul>
+                                        </ul>)}
                                     </Disclosure.Panel>
                                 </>
                             )}

@@ -9,6 +9,7 @@ User = get_user_model()
 class ShippingAddress(models.Model):
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='user_shipping_address', null=True)
     town = models.CharField(default='Nairobi', max_length=100)
+    default = models.BooleanField(default=False)
     # longtitude =
     # latitude = 
 
@@ -18,7 +19,7 @@ class ShippingAddress(models.Model):
 class DeliveryPlan(models.Model):
     name = models.CharField(max_length=50, unique=True)
     cost = models.PositiveBigIntegerField()
-    descritption = models.TextField()
+    description = models.TextField()
 
     def __str__(self):
         return self.name

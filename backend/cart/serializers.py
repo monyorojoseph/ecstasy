@@ -33,3 +33,8 @@ class ShippingAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShippingAddress
         fields = "__all__"
+
+class DeliveryPlanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeliveryPlan
+        fields = "__all__"
