@@ -4,7 +4,8 @@ import profile from "./profile";
 import item from "./item";
 import cart from "./cart";
 import delivery_plan from "./delivery_plan";
+import message from "./message";
 
 export default combineReducers({
-    authentication, profile, item, cart, delivery_plan
+    authentication, profile, item, cart, delivery_plan, message
 })

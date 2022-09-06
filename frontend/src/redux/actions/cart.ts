@@ -7,6 +7,7 @@ import { ADDING_ORDER_ITEM, ADDING_ORDER_ITEM_SUCCESFULLY, CHECKOUT, EMPTY_ORDER
     GOT_ORDER_ITEM_SUCCESFULLY, 
     GOT_TOTAL_SUCCESFULLY, 
     REMOVING_ORDER_ITEM, REMOVING_ORDER_ITEM_SUCCESFULLY, SUCCESSFULLY_CHECKOUT, SUCCESSFULLY_GOT_USER_ADDRESS } from "../reducers/cart";
+import { SEND_ERROR_MESSAGE } from "../reducers/message";
 
 interface slugType {
     slug: string
@@ -20,8 +21,9 @@ export const getCartItems = ()=> async(dispatch: Dispatch, getState: Function)=>
         const { data } = await axios.get('http://localhost:8000/cart/my-order-items', tokenConfig(token))
         dispatch(GOT_ORDER_ITEMS_SUCCESFULLY(data))
     } catch(error){
+        const msg = error.response.data ? error.response.data : error.message
+        dispatch(SEND_ERROR_MESSAGE(msg))
         dispatch(FAILED_TO_GET_ORDER_ITEMS())
-        console.log(error)
     }
 };
 
@@ -33,8 +35,9 @@ export const removeItemFromCart = (details: slugType)=> async(dispatch: Dispatch
         const { data } = await axios.post('http://localhost:8000/cart/remove-order-item', details, tokenConfig(token))
         dispatch(REMOVING_ORDER_ITEM_SUCCESFULLY(data))
     } catch(error){
+        const msg = error.response.data ? error.response.data : error.message
+        dispatch(SEND_ERROR_MESSAGE(msg))
         dispatch(FAILED_TO_REMOVE_ORDER_ITEM())
-        console.log(error)
     }
 };
 
@@ -46,8 +49,9 @@ export const addItemToCart = (details: slugType)=> async(dispatch: Dispatch, get
         const { data } = await axios.post('http://localhost:8000/cart/add-order-item', details, tokenConfig(token))
         dispatch(ADDING_ORDER_ITEM_SUCCESFULLY(data))
     } catch(error){
+        const msg = error.response.data ? error.response.data : error.message
+        dispatch(SEND_ERROR_MESSAGE(msg))
         dispatch(FAILED_TO_ADD_ORDER_ITEM())
-        console.log(error)
     }
 };
 
@@ -70,6 +74,8 @@ export const getOrderItem = (details: slugType)=> async(dispatch: Dispatch, getS
         const { data } = await axios.post('http://localhost:8000/cart/get-order-item', details, tokenConfig(token))
         dispatch(GOT_ORDER_ITEM_SUCCESFULLY(data))
     } catch(error){
+        const msg = error.response.data ? error.response.data : error.message
+        dispatch(SEND_ERROR_MESSAGE(msg))
         dispatch(EMPTY_ORDER_ITEM())
     }
 }
@@ -89,6 +95,8 @@ export const checkout = (details: checkoutTypes)=> async(dispatch: Dispatch, get
         const { data } = await axios.post('http://localhost:8000/cart/checkout', details, tokenConfig(token));
         dispatch(SUCCESSFULLY_CHECKOUT(data))
     }catch(error){
+        const msg = error.response.data ? error.response.data : error.message
+        dispatch(SEND_ERROR_MESSAGE(msg))
         dispatch(FAILED_TO_CHECKOUT())
     }
 }
@@ -100,6 +108,6 @@ export const getUserDefaultAddress = ()=> async(dispatch: Dispatch, getState: Fu
         const { data } = await axios.get('http://localhost:8000/cart/default-address', tokenConfig(token))
         dispatch(SUCCESSFULLY_GOT_USER_ADDRESS(data))
     }catch(error){
-        console.log(error)
+        console.log(error.response.data ? error.response.data : error.message)
     }
 }
