@@ -1,6 +1,9 @@
 from django.db import models
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 # Create your models here.
 class Category(models.Model):
@@ -36,3 +39,11 @@ class ItemImages(models.Model):
     class Meta:
         verbose_name_plural = 'ItemImages'
     
+class Review(models.Model):
+    item = models.ForeignKey(Item, on_delete=models.SET_NULL, null=True, related_name='item_review')
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='user_review')
+    comment = models.TextField()
+    posted_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.item.name)  
