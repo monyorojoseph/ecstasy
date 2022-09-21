@@ -1,32 +1,48 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import ResetPassword from "./pages/authentication/ResetPassword"
+import Signin from "./pages/authentication/Signin"
+import Signup from "./pages/authentication/Signup"
+import CartItems from "./pages/cart/CartItems"
+import Checkout from "./pages/cart/Checkout"
+import NotFound from "./pages/NotFound"
+import ItemDetails from "./pages/item/ItemDetails"
+import Items from "./pages/item/Items"
+import Orders from "./pages/settings/Orders"
+import Profile from "./pages/settings/Profile"
+import Settings from "./pages/settings/Settings"
+import Welcome from "./pages/Welcome"
+import Subscriptions from "./pages/settings/Subscriptions"
+import Header from "./components/Header"
+import { useState } from "react"
+import ProtectedRoute from "./ProtectedRoute"
+import Payment from "./pages/cart/Payment"
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [open, setOpen] = useState(false)
+
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+    <div className="bg-slate-50 min-h-screen">
+      <BrowserRouter>
+        <Header setOpen={setOpen} />
+        <CartItems open={open} setOpen={setOpen} />
+        <Routes>    
+          <Route path="/" element={<Welcome />} />
+          <Route path="items" element={<Items />} />
+          <Route path="item-:slug" element={<ItemDetails />} />
+          <Route path="checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
+          <Route path="payment" element={<ProtectedRoute><Payment /></ProtectedRoute>} />
+          <Route path="settings/" element={<ProtectedRoute><Settings /></ProtectedRoute>}>
+            <Route index element={<Profile />} />
+            <Route path="orders" element={<Orders />} />
+            <Route path="subscriptions" element={<Subscriptions />} />
+          </Route>
+          <Route path="reset-password" element={<ResetPassword />} />
+          <Route path="sign-in" element={<Signin />} />
+          <Route path="sign-up" element={<Signup />} />
+          <Route path="*" element={<NotFound/>} />
+        </Routes>
+      </BrowserRouter>
     </div>
   )
 }
