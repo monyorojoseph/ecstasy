@@ -1,6 +1,8 @@
 from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill
+# from django_lifecycle import LifecycleModelMixin
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -22,6 +24,8 @@ class Item(models.Model):
     details = models.TextField()
     # add highlight descritpion
     slug = models.CharField(unique=True, max_length=100, null=True, blank=True)
+    rating = models.OneToOneField('Rating', on_delete=models.SET_NULL, null=True, related_name='item_rating' )
+    subscription = models.ForeignKey('billing.Subscription', related_name='item_subscriptiton', on_delete=models.SET_NULL, null=True)
     
     def __str__(self) -> str:
         return self.name
@@ -47,3 +51,10 @@ class Review(models.Model):
 
     def __str__(self):
         return str(self.item.name)  
+
+class Rating(models.Model):
+    users = models.ManyToManyField(User, related_name='user_ratings')
+    votes = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    
+    def __str__(self) -> str:
+        return f'{self.item_rating.name} {self.votes}'
